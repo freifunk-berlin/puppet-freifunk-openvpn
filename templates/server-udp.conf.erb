@@ -1,0 +1,36 @@
+# Standard UDP config (ohne Verschluesselung)
+
+port 1194
+proto udp6
+dev-type tun
+dev tun-udp
+
+persist-key
+persist-tun
+ca stacked-ca.crt # Note: cat easy-rsa/keys/freifunk-ca.crt ianua/ianua-sven-ola-ca.crt ianua/ianua-melle-ca.crt > stacked-ca.crt
+cert easy-rsa/keys/freifunk.crt
+key easy-rsa/keys/freifunk.key
+dh easy-rsa/keys/dh1024.pem
+crl-verify easy-rsa/keys/crl.pem
+cipher none # For speed, use *-tcp.conf for security
+comp-lzo no
+
+topology subnet
+server 172.31.240.0 255.255.240.0
+push "redirect-gateway def1 bypass-dhcp bypass-dns"
+status /dev/null
+log /dev/null
+ifconfig-pool-persist /dev/null 0
+verb 2
+
+max-routes-per-client 4096
+iroute-timeout 3600
+dynamic-iroute 6.0.0.0 255.0.0.0
+dynamic-iroute 10.0.0.0 255.0.0.0
+dynamic-iroute 104.0.0.0 255.0.0.0
+dynamic-iroute 172.16.0.0 255.240.0.0
+learn-address openvpn-learn-address
+
+tcp-queue-limit 256
+script-security 2
+keepalive 10 60

@@ -1,0 +1,36 @@
+# Standard TCP config (mit Verschluesselung)
+
+port 443
+proto tcp6-server
+dev-type tun
+dev tun-tcp
+
+persist-key
+persist-tun
+ca easy-rsa/keys/freifunk-ca.crt
+cert easy-rsa/keys/freifunk.crt
+key easy-rsa/keys/freifunk.key
+dh easy-rsa/keys/dh1024.pem
+crl-verify easy-rsa/keys/crl.pem
+cipher AES-256-CBC # Compat with OpenVPN+PolarSSL
+comp-lzo yes
+
+topology subnet
+server 172.31.239.0 255.255.255.0
+push "redirect-gateway def1 bypass-dhcp bypass-dns"
+status /dev/null
+log /dev/null
+ifconfig-pool-persist /dev/null 0
+verb 2
+
+max-routes-per-client 4096
+iroute-timeout 3600
+dynamic-iroute 6.0.0.0 255.0.0.0
+dynamic-iroute 10.0.0.0 255.0.0.0
+dynamic-iroute 104.0.0.0 255.0.0.0
+dynamic-iroute 172.16.0.0 255.240.0.0
+learn-address openvpn-learn-address
+
+tcp-queue-limit 256
+script-security 2
+keepalive 10 60

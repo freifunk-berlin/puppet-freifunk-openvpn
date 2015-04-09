@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# The currently used 6-to-4 has 65536/64 addrs
+INET_DEV=tun64
+INET_IP6=2002:4d57:300a:0
+INET_MOD=$(( 512 ))
+
+LOCKFILE=/var/lock/openvpn-learn-address
+POOLFILE=/var/run/openvpn-pool-map66.txt
+
+case ${2} in ${2%/*})
+	# Do not add/delete network routes
+	case ${1} in add)
+		ip route add ${2} dev ${dev}
+	;;delete)
+		ip route del ${2}
+#	;; update)
+#		ip route del ${2}
+#		ip route add ${2} dev ${dev}
+	;;esac
+;;${2%::/*}::/64)(
+	# Handle iroute-dynamic-ipv6 ignore-hostbits
+	flock -n 9 || exit 1
+	case ${1} in add)
+		ip6=${2%::/*}
+		ip6=${ip6//:/_}
+		. ${POOLFILE} 2>&-
+		eval int=\${int_${ip6}}
+		eval ext=\${ext_${int}}
+
+		# If no mapping or mapping occupied: search new
+		if [ -z "${int}" ] || [ -n "${ext}}" ];then
+			last=$(( last )) # ensure number
+			stop=${last}
+			while [ 1 ];do
+				eval ext=\${ext_${last}}
+				case ${ext} in '')int=${last};;esac
+				last=$(( ( last + 1 ) % ${INET_MOD} ))
+				if [ -n "${int}" ] || [ ${last} -eq ${stop} ];then
+					break;
+				fi
+			done
+		fi
+
+		# If external ipv6 free: setup map66
+		if [ -n "${int}" ];then
+			eval int_${ip6}=\${int}
+			eval ext_${int}=\${2%::/*}
+			set|egrep '^(int_|ext_|last)'|sort > ${POOLFILE}
+
+			pfx=$(printf "%04x" $(( 0x${INET_IP6##*:} + ${int} )))
+			ip6tables -t mangle -A POSTROUTING -o ${INET_DEV} -s ${2} -j MAP66 --src-to ${INET_IP6%:*}:${pfx}::/64
+			ip6tables -t mangle -A PREROUTING  -i ${INET_DEV} -d ${INET_IP6%:*}:${pfx}::/64 -j MAP66 --dst-to ${2}
+		fi
+
+		ip route add ${2} dev ${dev}
+	;;delete)
+		ip6=${2%::/*}
+		ip6=${ip6//:/_}
+		. ${POOLFILE} 2>&-
+		eval int=\${int_${ip6}}
+		eval ext_${int}=
+		set|egrep '^(int_|ext_|last)'|sort > ${POOLFILE}
+
+		pfx=$(printf "%04x" $(( 0x${INET_IP6##*:} + ${int} )))
+		ip6tables -t mangle -D POSTROUTING -o ${INET_DEV} -s ${2} -j MAP66 --src-to ${INET_IP6%:*}:${pfx}::/64
+		ip6tables -t mangle -D PREROUTING  -i ${INET_DEV} -d ${INET_IP6%:*}:${pfx}::/64 -j MAP66 --dst-to ${2}
+		ip route del ${2}
+	;;esac) 9>${LOCKFILE}
+;;esac
+
+exit 0
