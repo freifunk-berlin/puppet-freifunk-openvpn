@@ -4,10 +4,10 @@
 #
 # This script is also executed via rc.local and openvpn e.g. start
 
-INET_DEV=eth0			# External interface
-INET_ADD=77.87.49		# Additional IPs
-INET_MIN=1
-INET_MAX=62
+INET_DEV=<%= @inet_dev %> # External interface
+INET_ADD=<%= @inet_add %>		# Additional IPs
+INET_MIN=<%= @inet_min %>
+INET_MAX=<%= @inet_max %>
 INET_RNG=$(((${INET_MAX} - ${INET_MIN}) + 1))
 VPN_DEVS="tun-melle tun-tcp tun-udp" # openvpn tunnel intefaces
 MESH_NET="6.0.0.0/8 10.0.0.0/8 172.16.0.0/12"

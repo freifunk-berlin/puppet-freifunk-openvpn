@@ -1,4 +1,9 @@
-class freifunk-openvpn() {
+class freifunk-openvpn(
+  $inet_dev='eth0',
+  $inet_add,
+  $inet_min,
+  $inet_max
+) {
 
   # add custom repository for freifunk-openvpn (patched openvpn version)
   apt::source { 'sven_ola':
