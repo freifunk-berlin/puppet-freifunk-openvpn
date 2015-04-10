@@ -37,16 +37,19 @@ class vpn03(
   file { '/etc/openvpn/openvpn-learn-address':
     ensure  => present,
     content => template('vpn03/openvpn-learn-address.erb'),
+    require => Package['freifunk-openvpn'],
   }
 
   # tcp and udp openvpn server configuration
   file { '/etc/openvpn/server-tcp.conf':
     ensure  => present,
     content => template('vpn03/server-tcp.conf.erb'),
+    require => Package['freifunk-openvpn'],
   }
   file { '/etc/openvpn/server-udp.conf':
     ensure  => present,
     content => template('vpn03/server-udp.conf.erb'),
+    require => Package['freifunk-openvpn'],
   }
 
   sysctl { 'net.ipv4.ip_forward': value => '1' }
