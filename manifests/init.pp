@@ -25,18 +25,21 @@ class vpn03(
   file { '/etc/rc.local':
     ensure  => present,
     content => template('vpn03/rc.local.erb'),
+    mode    => 755,
   }
 
   # script we use to change the NAT mapping
   file { '/etc/cron.daily/roulette':
     ensure  => present,
     content => template('vpn03/roulette.erb'),
+    mode    => 755,
   }
 
   # script we use to learn the back route
   file { '/etc/openvpn/openvpn-learn-address':
     ensure  => present,
     content => template('vpn03/openvpn-learn-address.erb'),
+    mode    => 755,
     require => Package['freifunk-openvpn'],
   }
 
