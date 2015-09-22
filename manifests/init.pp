@@ -8,7 +8,7 @@ class vpn03(
   # add custom repository for freifunk-openvpn (patched openvpn version)
   apt::source { 'sven_ola':
     comment     => 'sven-olas repo for openvpn and other stuff',
-    location    => 'http://sven-ola.dyndns.org/repo',
+    location    => 'http://sven-ola.commando.de/repo',
     release     => 'trusty',
     repos       => 'main',
     pin         => '500',
