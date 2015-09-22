@@ -14,13 +14,8 @@
 # Setzt die Variablen INET_DEV und MESH_NET
 . /etc/cron.daily/roulette
 
-# Sven-Ola: OpenVPN sind auch via UDPv4(53) und TCPv4(80) ansprechbar
-# Nur externe IP umleiten, andernfalls auch Umleitung bei IPSec/XAuth
-
 iptables -t nat -F PREROUTING
 iptables -t nat -P PREROUTING ACCEPT
-iptables -t nat -A PREROUTING -i ${INET_DEV} -p tcp -d ${INET_ADR%/*} --dport 80 -j REDIRECT --to-port 443
-iptables -t nat -A PREROUTING -i ${INET_DEV} -p udp -d ${INET_ADR%/*} --dport 53 -j REDIRECT --to-port 1194
 
 # Falls SNAT mal nicht greift: fuer private IPv4s gibts Fehlermeldung an Absender
 
