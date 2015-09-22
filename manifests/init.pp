@@ -12,9 +12,11 @@ class vpn03(
     release     => 'trusty',
     repos       => 'main',
     pin         => '500',
-    include_deb => true,
-    include_src => false,
     key         => 'AF1714D11903D0B2',
+    include     => {
+      src => false,
+      deb => true,
+    },
   }
   package { 'freifunk-openvpn':
     ensure => present,
