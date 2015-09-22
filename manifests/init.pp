@@ -56,4 +56,8 @@ class vpn03(
   }
 
   sysctl { 'net.ipv4.ip_forward': value => '1' }
+
+  # change conntrack timeouts to prevent droped packages
+  sysctl { 'net.netfilter.nf_conntrack_generic_timeout': value => '120' }
+  sysctl { 'net.ipv4.netfilter.ip_conntrack_generic_timeout': value => '120' }
 }
