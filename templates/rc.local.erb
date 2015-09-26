@@ -28,6 +28,9 @@ done
 iptables -t filter -A FORWARD -o ${INET_DEV} \
   -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
+ip rule add iif eth0 lookup reverseroutes
+ip rule add iif lo lookup reverseroutes
+
 # Increasing the size of nf_conntrack hash-table so we don't drop packets
 # because of a full table.
 echo 32768 > /sys/module/nf_conntrack/parameters/hashsize

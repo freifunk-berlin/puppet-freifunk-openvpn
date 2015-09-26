@@ -11,9 +11,9 @@ POOLFILE=/var/run/openvpn-pool-map66.txt
 case ${2} in ${2%/*})
 	# Do not add/delete network routes
 	case ${1} in add)
-		ip route add ${2} dev ${dev}
+		ip route add ${2} table reverseroutes dev ${dev}
 	;;delete)
-		ip route del ${2}
+		ip route del ${2} table reverseroutes
 #	;; update)
 #		ip route del ${2}
 #		ip route add ${2} dev ${dev}
