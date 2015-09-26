@@ -37,6 +37,13 @@ class vpn03(
     mode    => 755,
   }
 
+  # add reverseroute table
+  file { '/etc/iproute2/rt_tables':
+    ensure => present,
+    content => template('vpn03/rt_tables.erb'),
+    mode    => 755,
+  }
+
   # script we use to learn the back route
   file { '/etc/openvpn/openvpn-learn-address':
     ensure  => present,
