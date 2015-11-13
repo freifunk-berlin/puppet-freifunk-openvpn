@@ -69,6 +69,7 @@ class vpn03(
   # change conntrack timeouts to prevent droped packages
   sysctl { 'net.netfilter.nf_conntrack_generic_timeout': value => '120' }
   sysctl { 'net.ipv4.netfilter.ip_conntrack_generic_timeout': value => '120' }
+  sysctl { 'net.netfilter.nf_conntrack_tcp_timeout_established': value => '120' }
   # double nf_conntrack_max default value
   sysctl { 'net.netfilter.nf_conntrack_max': value => '131072' }
   sysctl { 'net.nf_conntrack_max': value => '131072' }
