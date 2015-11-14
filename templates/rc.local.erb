@@ -35,4 +35,9 @@ ip rule add iif lo lookup reverseroutes
 # because of a full table.
 echo 32768 > /sys/module/nf_conntrack/parameters/hashsize
 
+# ensure sysctl settings are set on boot
+# https://bugs.launchpad.net/ubuntu/+source/procps/+bug/50093
+
+/etc/init.d/procps restart
+
 exit 0
