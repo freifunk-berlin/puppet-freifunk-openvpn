@@ -37,6 +37,19 @@ keepalive 10 60
 
 # optimization
 
-# "optimize the event loop by avoiding the pool/epoll/select call
+# "Optimize the event loop by avoiding the pool/epoll/select call
 # improving CPU efficiency by 5% to 10%" (man page)
 fast-io
+
+# Do not use openvpn default value (as of 2.3.6 65536) for SO_SNDBUF, SO_RCVBUF.
+# If we don't set a value we use the kernel default.
+# Ticket: https://community.openvpn.net/openvpn/ticket/461
+# Commit: https://community.openvpn.net/openvpn/changeset/f0b64e5dc00f35e3b0fe8c53a316ee74c9cbf15f/
+# We can remove the fix on the server side with a new openvpn release
+sndbuf 0
+rcvbuf 0
+
+# Push the above fix to clients/routers. Adding this to the firmware is to
+# complicated and takes ages to roll out.
+push "sndbuf 0"
+push "rcvbuf 0"
