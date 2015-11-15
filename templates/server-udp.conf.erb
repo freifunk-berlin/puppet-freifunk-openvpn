@@ -34,3 +34,9 @@ learn-address openvpn-learn-address
 tcp-queue-limit 256
 script-security 2
 keepalive 10 60
+
+# optimization
+
+# "optimize the event loop by avoiding the pool/epoll/select call
+# improving CPU efficiency by 5% to 10%" (man page)
+fast-io
