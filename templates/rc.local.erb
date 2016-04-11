@@ -11,7 +11,7 @@ iptables -t nat -F POSTROUTING
 
 # Mark all packets that come from a vpn (input) interface so we can SNAT them
 # later in the POSTROUTING of the nat table.
-<% vpn_devs.each do |dev| %>
+<% @vpn_devs.each do |dev| %>
   iptables -t mangle -A PREROUTING -i <%= dev %> -j MARK --set-mark 42
 <% end %>
 
@@ -19,18 +19,18 @@ iptables -t nat -F POSTROUTING
 # intput interfaces.
 iptables -t nat -A POSTROUTING \
   -m mark --mark 42 \
-  -j SNAT --to <%= @inet_add %>.<%@inet_max %>-<%= @inet_add %>.<%@inet_max %>
+  -j SNAT --to <%= @inet_add %>.<%= @inet_max %>-<%= @inet_add %>.<%= @inet_max %>
 
 # Do not route to destinations that are part of RFC1918:
 # https://tools.ietf.org/html/rfc1918
-<% private_networks.each do |network| %>
-  iptables -t filter -A FORWARD -o <%@inet_dev %> -d <%= network %> \
+<% @private_networks.each do |network| %>
+  iptables -t filter -A FORWARD -o <%= @inet_dev %> -d <%= network %> \
     -j REJECT --reject-with icmp-net-prohibited
 <% end %>
 
 # Circumvent Path MTU Discovery issues with MSS Clamping:
 # http://lartc.org/howto/lartc.cookbook.mtu-mss.html
-iptables -t filter -A FORWARD -o <%@inet_dev %> \
+iptables -t filter -A FORWARD -o <%= @inet_dev %> \
   -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
 ip rule add iif eth0 lookup reverseroutes
