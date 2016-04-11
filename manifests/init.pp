@@ -34,7 +34,7 @@ class vpn03(
 
   # script we use to change the NAT mapping
   file { '/etc/cron.daily/roulette':
-    ensure  => present,
+    ensure  => absent,
     content => template('vpn03/roulette.erb'),
     mode    => 755,
   }
