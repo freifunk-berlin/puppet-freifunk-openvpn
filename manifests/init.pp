@@ -2,7 +2,9 @@ class vpn03(
   $inet_dev='eth0',
   $inet_add,
   $inet_min,
-  $inet_max
+  $inet_max,
+  $vpn_devs=['tun-tcp', 'tun-udp'],
+  $private_networks=['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '169.254.0.0/16']
 ) {
 
   # add custom repository for freifunk-openvpn (patched openvpn version)
@@ -32,8 +34,7 @@ class vpn03(
 
   # script we use to change the NAT mapping
   file { '/etc/cron.daily/roulette':
-    ensure  => present,
-    content => template('vpn03/roulette.erb'),
+    ensure  => absent,
     mode    => 755,
   }
 
