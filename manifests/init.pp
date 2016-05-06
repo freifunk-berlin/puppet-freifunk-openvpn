@@ -53,6 +53,19 @@ class vpn03(
     require => Package['freifunk-openvpn'],
   }
 
+  file { '/etc/openvpn/up':
+    ensure  => present,
+    content => template('vpn03/up.erb'),
+    mode    => 755,
+    require => Package['freifunk-openvpn'],
+  }
+  file { '/etc/openvpn/down':
+    ensure  => present,
+    content => template('vpn03/down.erb'),
+    mode    => 755,
+    require => Package['freifunk-openvpn'],
+  }
+
   # tcp and udp openvpn server configuration
   file { '/etc/openvpn/server-tcp.conf':
     ensure  => present,
