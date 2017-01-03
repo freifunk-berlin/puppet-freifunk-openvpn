@@ -29,40 +29,40 @@ class vpn03(
   file { '/etc/rc.local':
     ensure  => present,
     content => template('vpn03/rc.local.erb'),
-    mode    => 755,
+    mode    => '755',
   }
 
   # script we use to change the NAT mapping
   file { '/etc/cron.daily/roulette':
     ensure  => absent,
-    mode    => 755,
+    mode    => '755',
   }
 
   # add reverseroute table
   file { '/etc/iproute2/rt_tables':
     ensure => present,
     content => template('vpn03/rt_tables.erb'),
-    mode    => 755,
+    mode    => '755',
   }
 
   # script we use to learn the back route
   file { '/etc/openvpn/openvpn-learn-address':
     ensure  => present,
     content => template('vpn03/openvpn-learn-address.erb'),
-    mode    => 755,
+    mode    => '755',
     require => Package['freifunk-openvpn'],
   }
 
   file { '/etc/openvpn/up':
     ensure  => present,
     content => template('vpn03/up.erb'),
-    mode    => 755,
+    mode    => '755',
     require => Package['freifunk-openvpn'],
   }
   file { '/etc/openvpn/down':
     ensure  => present,
     content => template('vpn03/down.erb'),
-    mode    => 755,
+    mode    => '755',
     require => Package['freifunk-openvpn'],
   }
 
