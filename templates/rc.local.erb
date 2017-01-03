@@ -19,7 +19,7 @@ iptables -t nat -F POSTROUTING
 # intput interfaces.
 iptables -t nat -A POSTROUTING \
   -m mark --mark 42 \
-  -j SNAT --to <%= @inet_add %>.<%= @inet_max %>-<%= @inet_add %>.<%= @inet_max %>
+  -j SNAT --to <%= @inet_add %>.<%= @inet_min %>-<%= @inet_add %>.<%= @inet_max %>
 
 # Do not route to destinations that are part of RFC1918:
 # https://tools.ietf.org/html/rfc1918
