@@ -33,7 +33,7 @@ iptables -t nat -A POSTROUTING \
 iptables -t filter -A FORWARD -o <%= @inet_dev %> \
   -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
-ip rule add iif eth0 lookup reverseroutes
+ip rule add iif <%= @inet_dev %> lookup reverseroutes
 ip rule add iif lo lookup reverseroutes
 
 # Increasing the size of nf_conntrack hash-table so we don't drop packets
