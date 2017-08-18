@@ -3,7 +3,7 @@ class vpn03(
   $inet_add,
   $inet_min,
   $inet_max,
-  $vpn_devs=['tun-tcp', 'tun-udp'],
+  $vpn_devs=['tun-udp'],
   $private_networks=['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '169.254.0.0/16']
 ) {
 
@@ -66,12 +66,7 @@ class vpn03(
     require => Package['freifunk-openvpn'],
   }
 
-  # tcp and udp openvpn server configuration
-  file { '/etc/openvpn/server-tcp.conf':
-    ensure  => present,
-    content => template('vpn03/server-tcp.conf.erb'),
-    require => Package['freifunk-openvpn'],
-  }
+  # udp openvpn server configuration
   file { '/etc/openvpn/server-udp.conf':
     ensure  => present,
     content => template('vpn03/server-udp.conf.erb'),
